@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Admin Panel</title>
+  <script type="module">
+    // ----------- FIREBASE MODULAR SDK -----------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCn654g92JIMmYkLZ2bGuJu9rv3D2UHnYo",
+      authDomain: "gulab-jewellers.firebaseapp.com",
+      projectId: "gulab-jewellers",
+      storageBucket: "gulab-jewellers.firebasestorage.app",
+      messagingSenderId: "179811621534",
+      appId: "1:179811621534:web:da5e6ca69a60a6be31b98f",
+      measurementId: "G-0CZB78MM3X"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Expose functions globally for button clicks
+    window.loadRates = async () => {
+      try {
+        const docRef = doc(db, "rates", "today");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("gold995").value = data.gold_bar_9950 || "";
+          document.getElementById("gold999").value = data.gold_bar_9999 || "";
+          document.getElementById("goldRTGS").value = data.gold_rtgs_9999 || "";
+          document.getElementById("silver").value = data.silver_batiya || "";
+          document.getElementById("silverRTGS").value = data.silver_rtgs_batiya || "";
+        }
+      } catch (err) {
+        alert("Failed to load rates: " + err.message);
+      }
+    };
+
+    window.saveRates = async () => {
+      const gold995 = Number(document.getElementById("gold995").value);
+      const gold999 = Number(document.getElementById("gold999").value);
+      const goldRTGS = Number(document.getElementById("goldRTGS").value);
+      const silver = Number(document.getElementById("silver").value);
+      const silverRTGS = Number(document.getElementById("silverRTGS").value);
+
+      try {
+        await setDoc(doc(db, "rates", "today"), {
+          gold_bar_9950: gold995,
+          gold_bar_9999: gold999,
+          gold_rtgs_9999: goldRTGS,
+          silver_batiya: silver,
+          silver_rtgs_batiya: silverRTGS,
+          updated_at: new Date().toISOString()
+        });
+        alert("✅ Rates saved successfully!");
+      } catch (err) {
+        alert("❌ Failed to save rates: " + err.message);
+      }
+    };
+
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#FFFDF8] flex items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-md bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold text-center mb-4">Update Rates</h1>
+
+    <div class="space-y-3">
+      <input id="gold995" type="number" placeholder="Gold Bar 99.50" class="w-full border p-2 rounded">
+      <input id="gold999" type="number" placeholder="Gold Bar 99.99" class="w-full border p-2 rounded">
+      <input id="goldRTGS" type="number" placeholder="Gold RTGS 99.99" class="w-full border p-2 rounded">
+      <input id="silver" type="number" placeholder="Silver Batiya" class="w-full border p-2 rounded">
+      <input id="silverRTGS" type="number" placeholder="Silver RTGS Batiya" class="w-full border p-2 rounded">
+    </div>
+
+    <button onclick="saveRates()" class="w-full mt-4 bg-amber-600 text-white py-2 rounded hover:bg-amber-700 transition">
+      Save Rates
+    </button>
+
+    <button onclick="loadRates()" class="w-full mt-2 bg-gray-500 text-white py-2 rounded hover:bg-gray-600 transition">
+      Load Existing Rates
+    </button>
+  </div>
+</body>
+</html>
