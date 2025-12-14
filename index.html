@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Gulab Ornament X Madhuri Jewellers</title>
+    
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#B8860B" />
+    <meta name="description" content="Live gold and silver rates for Gulab Ornament X Madhuri Jewellers" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React & Babel (UMD) -->
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <style>
+      :root {
+        --font-heading: 'Playfair Display', serif;
+        --font-body: 'Inter', sans-serif;
+      }
+      body {
+        font-family: var(--font-body);
+        background-color: #FFFDF8;
+        color: #3D3D3D;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #D4AF37;
+        border-radius: 2px;
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body class="antialiased h-[100dvh] flex flex-col bg-[#FFFDF8] overflow-hidden">
+    <div id="root" class="h-full w-full flex flex-col"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // --- Firebase Initialization ---
+      const firebaseConfig = {
+        apiKey: "AIzaSyCn654g92JIMmYkLZ2bGuJu9rv3D2UHnYo",
+        authDomain: "gulab-jewellers.firebaseapp.com",
+        projectId: "gulab-jewellers",
+        storageBucket: "gulab-jewellers.firebasestorage.app",
+        messagingSenderId: "179811621534",
+        appId: "1:179811621534:web:da5e6ca69a60a6be31b98f",
+        measurementId: "G-0CZB78MM3X"
+      };
+
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      // Initialize Cloud Firestore
+      const db = typeof firebase !== 'undefined' ? firebase.firestore() : null;
+
+      // --- Components ---
+
+      const LogoIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+      );
+
+      const ShareIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
+          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.875-1.977l-4.94-2.47a3.027 3.027 0 000-.742l4.94-2.47A3 3 0 0015 8z" />
+        </svg>
+      );
+
+      const PhoneIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
+          <path fillRule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.117.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clipRule="evenodd" />
+        </svg>
+      );
+
+      // Section Headers
+      const GoldBarIcon = () => (
+        <svg className="w-5 h-5 text-amber-700" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a1 1 0 100-2 1 1 0 000 2z" />
+        </svg>
+      );
+
+      const SilverBarIcon = () => (
+        <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+           <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
+        </svg>
+      );
+
+      const RateCard = ({ label, purity, rate, loading, highlight, isSilver }) => {
+        const containerClasses = isSilver 
+          ? "bg-white border-slate-200 text-slate-800"
+          : "bg-white border-amber-200 text-amber-900";
+
+        const labelColor = isSilver ? "text-slate-500" : "text-amber-800/80";
+        const accentColor = isSilver ? "bg-slate-100 text-slate-600" : "bg-amber-50 text-amber-800";
+
+        return (
+          <div className={`relative w-full p-4 rounded-xl border shadow-sm transition-all ${containerClasses}`}>
+             <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                    <span className={`text-[13px] font-bold tracking-wide ${labelColor}`}>{label}</span>
+                    <span className={`text-[10px] w-fit px-2 py-0.5 rounded-md font-medium ${accentColor}`}>{purity}</span>
+                </div>
+                
+                {loading ? (
+                    <div className="h-8 w-28 rounded animate-pulse bg-gray-200"></div>
+                ) : (
+                    <div className="flex items-baseline gap-1">
+                         <span className="text-sm font-medium opacity-50">₹</span>
+                         <span className="text-2xl font-bold tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                            {rate !== undefined && rate !== null ? rate.toLocaleString('en-IN') : '--'}
+                         </span>
+                    </div>
+                )}
+             </div>
+          </div>
+        );
+      };
+
+      const ContactCard = ({ name, role, number }) => (
+        <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-amber-100 shadow-sm w-full">
+          <div className="flex flex-col">
+            <span className="font-bold text-amber-950 text-sm">{name}</span>
+            {role && <span className="text-[10px] text-amber-700/60 font-medium">{role}</span>}
+          </div>
+          <a href={`tel:${number}`} className="flex items-center gap-1.5 text-amber-700 font-mono text-xs font-bold hover:text-amber-900 transition-colors bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+            <PhoneIcon className="w-3.5 h-3.5" />
+            <span>{number}</span>
+          </a>
+        </div>
+      );
+
+      // --- Main App ---
+
+      const GOLD_ITEMS = [
+        { key: 'gold_bar_9950', label: 'Gold Bar', purity: '99.50%', },
+        { key: 'gold_bar_9999', label: 'Gold Bar', purity: '99.99%', },
+        { key: 'gold_rtgs_9999', label: 'Gold RTGS', purity: '99.99%' },
+      ];
+
+      const SILVER_ITEMS = [
+        { key: 'silver_batiya', label: 'Silver Batiya', purity: 'Standard', isSilver: true },
+        { key: 'silver_rtgs_batiya', label: 'Silver RTGS', purity: 'Batiya', isSilver: true },
+      ];
+
+      const App = () => {
+        const [rates, setRates] = useState(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+
+        useEffect(() => {
+          try {
+            const savedRates = localStorage.getItem("metalRates");
+            if (savedRates) {
+              setRates(JSON.parse(savedRates));
+              setLoading(false);
+            }
+          } catch (e) {
+            console.error("Failed to parse saved rates", e);
+          }
+
+          if (!db) {
+            setError("Database connection unavailable.");
+            setLoading(false);
+            return;
+          }
+
+          // Use Firestore listener
+          const unsubscribe = db.collection("rates").doc("today")
+            .onSnapshot((doc) => {
+              if (doc.exists) {
+                const val = doc.data();
+                const newRates = {
+                  gold_bar_9950: Number(val.gold_bar_9950) || 0,
+                  gold_bar_9999: Number(val.gold_bar_9999) || 0,
+                  gold_rtgs_9999: Number(val.gold_rtgs_9999) || 0,
+                  silver_batiya: Number(val.silver_batiya) || 0,
+                  silver_rtgs_batiya: Number(val.silver_rtgs_batiya) || 0
+                };
+                setRates(newRates);
+                localStorage.setItem("metalRates", JSON.stringify(newRates));
+                setLoading(false);
+                setError(null);
+              } else {
+                setLoading(false);
+                // Optional: Handle case where document doesn't exist yet
+              }
+            }, (err) => {
+              console.error("Firestore read failed:", err);
+              setError("Live updates temporarily unavailable.");
+              setLoading(false);
+            });
+
+          return () => unsubscribe();
+        }, []);
+
+        const handleShare = async () => {
+          if (navigator.share && rates) {
+            const shareText = `Gulab Ornament X Madhuri Jewellers\n\nGold 99.5: ₹${rates.gold_bar_9950}\nGold 99.9: ₹${rates.gold_bar_9999}\nGold RTGS: ₹${rates.gold_rtgs_9999}\n\nSilver: ₹${rates.silver_batiya}\nSilver RTGS: ₹${rates.silver_rtgs_batiya}`;
+            try {
+              await navigator.share({
+                title: 'Live Rates',
+                text: shareText,
+              });
+            } catch (err) {
+              console.error("Error sharing:", err);
+            }
+          } else {
+            alert('Share functionality is not supported on this browser.');
+          }
+        };
+
+        return (
+          <div className="flex flex-col flex-grow w-full max-w-md mx-auto h-full" style={{ fontFamily: 'var(--font-body)' }}>
+            {/* Header - Sticky */}
+            <header className="px-5 py-4 glass-effect z-50 border-b border-amber-100/80 shadow-sm sticky top-0">
+              <div className="flex flex-col items-center justify-center gap-1">
+                <div className="flex items-center gap-2">
+                  <LogoIcon className="w-6 h-6 text-amber-600" />
+                  <h1 className="text-base sm:text-lg font-bold text-center text-amber-950 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                    Gulab Ornament <span className="text-amber-600 font-serif italic text-sm">X</span> Madhuri Jewellers
+                  </h1>
+                </div>
+                <p className="text-[9px] uppercase tracking-[0.25em] text-gray-400 font-medium">Excellence in Purity</p>
+              </div>
+            </header>
+
+            {/* Main Content - Scrollable */}
+            <main className="flex-grow flex flex-col px-4 py-6 gap-6 overflow-y-auto pb-12 bg-gray-50/50">
+              
+              {/* Controls */}
+              <div className="flex justify-between items-center px-1">
+                 <div className="flex items-center gap-2 bg-green-50 px-2 py-1 rounded-full border border-green-100">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span className="text-[10px] font-bold text-green-700 uppercase tracking-wide">Live Market</span>
+                 </div>
+                 <button 
+                    onClick={handleShare} 
+                    className="py-1.5 px-3 rounded-full bg-white hover:bg-amber-50 text-amber-700 transition-colors flex items-center gap-1.5 border border-amber-200 shadow-sm"
+                    aria-label="Share Rates"
+                  >
+                    <ShareIcon className="w-3.5 h-3.5" />
+                    <span className="text-[11px] font-bold">Share</span>
+                  </button>
+              </div>
+              
+              {/* Error Message Only (Spinner Removed) */}
+              {error && <p className="text-red-500 text-xs text-center py-2 bg-red-50 rounded-lg border border-red-100">{error}</p>}
+              
+              {/* Gold Section */}
+              <section className="bg-amber-50/60 rounded-2xl p-4 border border-amber-100/50">
+                 <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 bg-amber-100 rounded-lg shadow-sm">
+                      <GoldBarIcon />
+                    </div>
+                    <h3 className="text-sm font-bold text-amber-900 uppercase tracking-wider">Gold Rates</h3>
+                 </div>
+                 <div className="flex flex-col gap-3">
+                    {GOLD_ITEMS.map((item) => (
+                       <div key={item.key}>
+                          <RateCard 
+                             label={item.label}
+                             purity={item.purity}
+                             rate={rates ? rates[item.key] : undefined}
+                             loading={loading && !rates}
+                          />
+                       </div>
+                    ))}
+                 </div>
+              </section>
+
+              {/* Silver Section */}
+              <section className="bg-slate-50 rounded-2xl p-4 border border-slate-200/60">
+                 <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 bg-slate-200 rounded-lg shadow-sm">
+                      <SilverBarIcon />
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Silver Rates</h3>
+                 </div>
+                 <div className="flex flex-col gap-3">
+                    {SILVER_ITEMS.map((item) => (
+                       <div key={item.key}>
+                          <RateCard 
+                             label={item.label}
+                             purity={item.purity}
+                             rate={rates ? rates[item.key] : undefined}
+                             loading={loading && !rates}
+                             isSilver={true}
+                          />
+                       </div>
+                    ))}
+                 </div>
+              </section>
+
+              {/* Contacts Section */}
+              <div className="mt-2">
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="h-px bg-amber-200 flex-grow opacity-50"></div>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-widest text-center font-medium">Contact Us</p>
+                    <div className="h-px bg-amber-200 flex-grow opacity-50"></div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <ContactCard name="Gulab Ji" role="Proprietor" number="9335660331" />
+                  <ContactCard name="Vikas Verma" number="7499233028" />
+                  <ContactCard name="Nishant Verma" number="7619996888" />
+                </div>
+              </div>
+
+            </main>
+
+            {/* Footer */}
+            <footer className="bg-white text-gray-400 py-4 text-center shrink-0 border-t border-gray-100">
+              <p className="text-[10px] font-medium tracking-wide">
+                &copy; 2024 Gulab Ornament X Madhuri Jewellers
+              </p>
+            </footer>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
