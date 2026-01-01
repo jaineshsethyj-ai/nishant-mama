@@ -1,151 +1,136 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Gulab Ornament X Madhuri Jewellers</title>
-    
-    <!-- PWA Meta -->
-    <meta name="theme-color" content="#B8860B" />
-    <meta name="description" content="Live gold and silver rates for Gulab Ornament X Madhuri Jewellers" />
-
-    <!-- Fonts -->
+    <title>Gulab X Madhuri Jewellers | Happy New Year 2026 🎊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- React & Babel (UMD) -->
-    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin="anonymous"></script>
-
-    <!-- Tailwind Config (Must be before Tailwind CDN) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
     <script>
-      tailwind = {
-        config: {
-          theme: {
-            extend: {
-              colors: {
-                gold: {
-                  50: '#FBF8F1',
-                  100: '#F5EEDA',
-                  200: '#EBDDB0',
-                  300: '#E0CA82',
-                  400: '#D6B658',
-                  500: '#CC9F2E', // Base Gold
-                  600: '#A37A1E',
-                  700: '#8A6615', // Darker for text
-                  800: '#6B4F10',
-                  900: '#423006', // Very dark for headings
-                }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              festive: { red: '#600000', gold: '#C5A059', dark: '#050505' },
+              gold: {
+                50: '#FDFCF0', 100: '#F9F6D6', 200: '#F1E9A6', 300: '#E7D776', 400: '#DCC150',
+                500: '#D4AF37', 600: '#AA8C2C', 700: '#806921', 800: '#554616', 900: '#2B230B',
+              }
+            },
+            fontFamily: {
+              heading: ['Playfair Display', 'serif'],
+              accent: ['Cinzel', 'serif'],
+              body: ['Inter', 'sans-serif'],
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'shimmer': 'shimmer 2.5s infinite linear',
+              'confetti-fall': 'confetti-fall 4s linear infinite',
+              'firework-burst': 'firework-burst 2s ease-out forwards',
+            },
+            keyframes: {
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              'confetti-fall': {
+                '0%': { transform: 'translateY(-10vh) rotate(0deg)', opacity: 1 },
+                '100%': { transform: 'translateY(110vh) rotate(720deg)', opacity: 0 },
+              },
+              'firework-burst': {
+                '0%': { transform: 'translate(-50%, -50%) scale(0.1)', opacity: 1 },
+                '50%': { opacity: 1 },
+                '100%': { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 0 },
               }
             }
           }
         }
       }
     </script>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Firebase SDKs (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" crossorigin="anonymous"></script>
-
     <style>
-      :root {
-        --font-heading: 'Playfair Display', serif;
-        --font-body: 'Inter', sans-serif;
-      }
       body {
-        font-family: var(--font-body);
-        background-color: #FDFBF7;
-        color: #4A4A4A;
+        background-color: #050505;
+        background-image: radial-gradient(circle at 50% 50%, #1a150a 0%, #050505 100%);
+        color: #e5e7eb;
+        -webkit-tap-highlight-color: transparent;
+        overflow-x: hidden;
       }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
+      .noise {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0.03;
+        z-index: 1000;
+        pointer-events: none;
+        background-image: url('https://grainy-gradients.vercel.app/noise.svg');
       }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #CC9F2E;
-        border-radius: 2px;
-      }
-      .glass-effect {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: -200% center;
-        }
-        100% {
-          background-position: 200% center;
-        }
-      }
-      .gold-text-shimmer {
-        background: linear-gradient(
-          to right,
-          #423006 0%,
-          #423006 40%,
-          #D4AF37 50%,
-          #423006 60%,
-          #423006 100%
-        );
-        background-size: 200% auto;
-        color: #423006;
-        background-clip: text;
+      .gold-text {
+        background: linear-gradient(to right, #BF953F, #FCF6BA, #FBF5B7, #B38728, #AA771C);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shimmer 3s linear infinite;
+        display: inline-block;
       }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(212, 175, 55, 0.12);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+      
+      .firework-particle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        top: -10px;
+        z-index: 101;
+      }
+
+      .shimmer-btn {
+        background: linear-gradient(90deg, #D4AF37 0%, #FDFCF0 50%, #D4AF37 100%);
+        background-size: 200% auto;
+        animation: shimmer 3s infinite linear;
+      }
+
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }
     </style>
-  </head>
-  <body class="antialiased h-[100dvh] flex flex-col overflow-hidden selection:bg-gold-200 selection:text-gold-900">
-    <div id="root" class="h-full w-full flex flex-col"></div>
-
-    <script type="text/babel">
-      const { useState, useEffect, Component } = React;
-
-      // --- Error Boundary ---
-      class ErrorBoundary extends Component {
-        constructor(props) {
-          super(props);
-          this.state = { hasError: false, error: null };
-        }
-
-        static getDerivedStateFromError(error) {
-          return { hasError: true, error };
-        }
-
-        componentDidCatch(error, errorInfo) {
-          console.error("Uncaught error:", error, errorInfo);
-        }
-
-        render() {
-          if (this.state.hasError) {
-            return (
-              <div className="flex items-center justify-center h-full p-6 text-center text-red-600 bg-red-50">
-                <div>
-                  <h2 className="text-lg font-bold mb-2">Something went wrong</h2>
-                  <p className="text-sm opacity-80">{this.state.error?.message || "Unknown error"}</p>
-                  <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-red-600 text-white rounded shadow">
-                    Reload Application
-                  </button>
-                </div>
-              </div>
-            );
-          }
-          return this.props.children;
-        }
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <!-- ESM Import Map -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom": "https://esm.sh/react-dom@18.2.0",
+        "htm": "https://esm.sh/htm@3.1.1"
       }
+    }
+    </script>
+  </head>
+  <body class="antialiased">
+    <div class="noise"></div>
+    <div id="root"></div>
 
-      // --- Firebase Initialization ---
+    <script type="module">
+      import React, { useState, useEffect, useMemo, useCallback } from 'react';
+      import ReactDOM from 'react-dom';
+      import htm from 'htm';
+
+      const html = htm.bind(React.createElement);
+
       const firebaseConfig = {
         apiKey: "AIzaSyCn654g92JIMmYkLZ2bGuJu9rv3D2UHnYo",
         authDomain: "gulab-jewellers.firebaseapp.com",
@@ -156,337 +141,288 @@
         measurementId: "G-0CZB78MM3X"
       };
 
-      let db = null;
-      try {
-        if (typeof firebase !== 'undefined') {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            db = firebase.firestore();
-        }
-      } catch (err) {
-        console.error("Firebase Init Error:", err);
-      }
-
-      // --- Components ---
-
-      const ShareIcon = (props) => (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.875-1.977l-4.94-2.47a3.027 3.027 0 000-.742l4.94-2.47A3 3 0 0015 8z" />
-        </svg>
-      );
-
-      const PhoneIcon = (props) => (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-          <path fillRule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.117.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clipRule="evenodd" />
-        </svg>
-      );
-
-      const DiamondIcon = (props) => (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-           <path d="M12,2L2,12L12,22L22,12L12,2Z" />
-        </svg>
-      );
-
-      // Section Headers
-      const GoldBarIcon = (props) => (
-        <svg fill="currentColor" viewBox="0 0 20 20" {...props}>
-          <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a1 1 0 100-2 1 1 0 000 2z" />
-        </svg>
-      );
-
-      const SilverBarIcon = (props) => (
-        <svg fill="currentColor" viewBox="0 0 20 20" {...props}>
-           <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
-        </svg>
-      );
-
-      const SectionHeader = ({ title, icon: Icon, colorClass }) => (
-         <div className="flex items-center gap-4 mb-5">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gray-200"></div>
-            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full border shadow-sm bg-white ${colorClass}`}>
-                <Icon className="w-4 h-4" />
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em]">{title}</h3>
-            </div>
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gray-200"></div>
-         </div>
-      );
-
-      const RateCard = ({ label, purity, rate, loading, isSilver }) => {
-        const containerClasses = isSilver 
-          ? "bg-gradient-to-br from-white to-slate-50 border-slate-200 text-slate-800"
-          : "bg-gradient-to-br from-white to-gold-50 border-gold-200 text-gold-900";
-
-        const labelColor = isSilver ? "text-slate-600" : "text-gold-800";
-        const badgeClasses = isSilver 
-          ? "bg-slate-100 text-slate-600 border border-slate-200" 
-          : "bg-white/80 text-gold-700 border border-gold-100";
-        
-        // Simple text color, no gradient
-        const priceColor = isSilver ? "text-slate-700" : "text-gold-700";
-
-        return (
-          <div className={`relative w-full p-5 rounded-2xl border shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all ${containerClasses}`}>
-             <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-1.5">
-                    <span className={`text-sm font-bold tracking-wide ${labelColor}`}>{label}</span>
-                    <span className={`text-[10px] w-fit px-2 py-0.5 rounded shadow-sm font-semibold uppercase tracking-wider ${badgeClasses}`}>{purity}</span>
-                </div>
-                
-                {loading ? (
-                    <div className="h-9 w-28 rounded-lg animate-pulse bg-gray-200/60"></div>
-                ) : (
-                    <div className="flex items-baseline gap-1">
-                         <span className={`text-sm font-medium opacity-60 ${isSilver ? 'text-slate-500' : 'text-gold-600'}`}>₹</span>
-                         {/* Removed custom font family to keep it simple */}
-                         <span className={`text-2xl sm:text-3xl font-bold tracking-tight ${priceColor}`}>
-                            {rate !== undefined && rate !== null ? rate.toLocaleString('en-IN') : '--'}
-                         </span>
-                    </div>
-                )}
-             </div>
-          </div>
-        );
+      const Icons = {
+        Share: () => html`<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.075-.755Z" clip-rule="evenodd" /></svg>`,
+        Phone: () => html`<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clip-rule="evenodd" /></svg>`
       };
 
-      const ContactCard = ({ name, role, number }) => (
-        <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gold-100 shadow-sm w-full group transition-all hover:border-gold-300">
-          <div className="flex flex-col">
-            <span className="font-bold text-gold-900 text-sm group-hover:text-gold-700 transition-colors">{name}</span>
-            {role && <span className="text-[10px] text-gold-500 font-medium uppercase tracking-wide mt-0.5">{role}</span>}
+      const Firework = ({ x, y, color }) => {
+        const particles = useMemo(() => Array.from({ length: 12 }).map((_, i) => {
+          const angle = (i / 12) * Math.PI * 2;
+          const dist = 60 + Math.random() * 40;
+          return {
+            x: Math.cos(angle) * dist,
+            y: Math.sin(angle) * dist,
+            id: i
+          };
+        }), []);
+
+        return html`
+          <div className="absolute pointer-events-none" style=${{ left: x, top: y }}>
+            ${particles.map(p => html`
+              <div 
+                key=${p.id}
+                className="firework-particle animate-firework-burst"
+                style=${{
+                  backgroundColor: color,
+                  boxShadow: `0 0 10px ${color}, 0 0 20px ${color}`,
+                  '--tw-translate-x': `${p.x}px`,
+                  '--tw-translate-y': `${p.y}px`
+                }}
+              />
+            `)}
           </div>
-          <a href={`tel:${number}`} className="flex items-center gap-2 text-gold-700 font-mono text-xs font-bold hover:bg-gold-50 transition-colors bg-white px-3 py-2 rounded-lg border border-gold-100 shadow-sm">
-            <PhoneIcon className="w-3.5 h-3.5" />
-            <span>{number}</span>
-          </a>
-        </div>
-      );
+        `;
+      };
 
-      // --- Main App ---
+      const DynamicFireworks = ({ active }) => {
+        const [bursts, setBursts] = useState([]);
+        const colors = ['#D4AF37', '#FCF6BA', '#8B0000', '#FFD700', '#FFFFFF'];
 
-      const GOLD_ITEMS = [
-        { key: 'gold_bar_9950', label: 'Gold Bar', purity: '99.50%', },
-        { key: 'gold_bar_9999', label: 'Gold Bar', purity: '99.99%', },
-        { key: 'gold_rtgs_9999', label: 'Gold RTGS', purity: '99.99%' },
-      ];
+        const triggerBurst = useCallback(() => {
+          const id = Date.now();
+          const x = `${10 + Math.random() * 80}%`;
+          const y = `${20 + Math.random() * 60}%`;
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          setBursts(prev => [...prev, { id, x, y, color }]);
+          
+          setTimeout(() => {
+            setBursts(prev => prev.filter(b => b.id !== id));
+          }, 2000);
+        }, []);
 
-      const SILVER_ITEMS = [
-        { key: 'silver_batiya', label: 'Silver Batiya', purity: 'Standard', isSilver: true },
-        { key: 'silver_rtgs_batiya', label: 'Silver RTGS', purity: 'Batiya', isSilver: true },
-      ];
+        useEffect(() => {
+          if (!active) return;
+          const interval = setInterval(triggerBurst, 1500);
+          return () => clearInterval(interval);
+        }, [active, triggerBurst]);
+
+        return html`
+          <div className="fixed inset-0 pointer-events-none z-[105]">
+            ${bursts.map(b => html`<${Firework} key=${b.id} ...${b} />`)}
+          </div>
+        `;
+      };
+
+      const RateCard = ({ label, purity, rate, loading, isSilver }) => {
+        return html`
+          <div className=${`group relative p-6 rounded-2xl transition-all duration-300 hover:translate-y-[-2px] ${isSilver ? 'glass-card border-slate-700/30' : 'glass-card'}`}>
+            ${!isSilver && html`<div className="absolute top-0 left-0 w-1 h-full bg-gold-500 rounded-l-2xl"></div>`}
+            ${isSilver && html`<div className="absolute top-0 left-0 w-1 h-full bg-slate-400 rounded-l-2xl opacity-50"></div>`}
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className=${`text-[10px] font-black uppercase tracking-[0.2em] ${isSilver ? 'text-slate-500' : 'text-gold-600'}`}>${purity}</p>
+                <h4 className=${`text-sm font-semibold tracking-tight ${isSilver ? 'text-slate-300' : 'text-white'}`}>${label}</h4>
+              </div>
+              <div className="flex flex-col items-end">
+                ${loading 
+                  ? html`<div className="h-8 w-28 bg-white/5 animate-pulse rounded-lg"></div>`
+                  : html`
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-baseline gap-1">
+                        <span className=${`text-xs font-medium ${isSilver ? 'text-slate-500' : 'text-gold-500'}`}>₹</span>
+                        <span className=${`text-3xl font-black font-heading tracking-tighter ${isSilver ? 'text-slate-100' : 'gold-text'}`}>
+                          ${rate ? rate.toLocaleString('en-IN') : '--'}
+                        </span>
+                      </div>
+                    </div>
+                  `
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      };
+
+      const ConfettiRain = () => {
+        const colors = ['#D4AF37', '#8B0000', '#FDFCF0', '#AA8C2C'];
+        const particles = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({
+          id: i,
+          left: `${Math.random() * 100}%`,
+          delay: `${Math.random() * 4}s`,
+          duration: `${3 + Math.random() * 2}s`,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: `${4 + Math.random() * 6}px`,
+          radius: Math.random() > 0.5 ? '50%' : '0%'
+        })), []);
+
+        return html`
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            ${particles.map(p => html`
+              <div 
+                key=${p.id}
+                className="confetti animate-confetti-fall"
+                style=${{
+                  left: p.left,
+                  backgroundColor: p.color,
+                  width: p.size,
+                  height: p.size,
+                  borderRadius: p.radius,
+                  animationDelay: p.delay,
+                  animationDuration: p.duration
+                }}
+              />
+            `)}
+          </div>
+        `;
+      };
 
       const App = () => {
         const [rates, setRates] = useState(null);
         const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
+        const [showOverlay, setShowOverlay] = useState(true);
+        const [lastUpdate, setLastUpdate] = useState('');
 
         useEffect(() => {
-          try {
-            const savedRates = localStorage.getItem("metalRates");
-            if (savedRates) {
-              setRates(JSON.parse(savedRates));
-              setLoading(false);
-            }
-          } catch (e) {
-            console.error("Failed to parse saved rates", e);
+          if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            return db.collection("rates").doc("today").onSnapshot((doc) => {
+              if (doc.exists) {
+                setRates(doc.data());
+                setLoading(false);
+                setLastUpdate(new Date().toLocaleTimeString('en-IN'));
+              }
+            });
           }
-
-          if (!db) {
-            setError("Database connection unavailable.");
-            setLoading(false);
-            return;
-          }
-
-          // Use Firestore listener
-          let unsubscribe = () => {};
-          try {
-              unsubscribe = db.collection("rates").doc("today")
-                .onSnapshot((doc) => {
-                  if (doc.exists) {
-                    const val = doc.data();
-                    const newRates = {
-                      gold_bar_9950: Number(val.gold_bar_9950) || 0,
-                      gold_bar_9999: Number(val.gold_bar_9999) || 0,
-                      gold_rtgs_9999: Number(val.gold_rtgs_9999) || 0,
-                      silver_batiya: Number(val.silver_batiya) || 0,
-                      silver_rtgs_batiya: Number(val.silver_rtgs_batiya) || 0
-                    };
-                    setRates(newRates);
-                    try {
-                        localStorage.setItem("metalRates", JSON.stringify(newRates));
-                    } catch (storageErr) {
-                        console.warn("LocalStorage access failed", storageErr);
-                    }
-                    setLoading(false);
-                    setError(null);
-                  } else {
-                    setLoading(false);
-                  }
-                }, (err) => {
-                  console.error("Firestore read failed:", err);
-                  setError("Live updates temporarily unavailable.");
-                  setLoading(false);
-                });
-          } catch (err) {
-              console.error("Firestore subscription failed", err);
-              setError("Connection failed.");
-              setLoading(false);
-          }
-
-          return () => {
-             if (typeof unsubscribe === 'function') unsubscribe();
-          };
         }, []);
 
-        const handleShare = async () => {
-          if (navigator.share && rates) {
-            const shareText = `✨ Gulab Ornament X Madhuri Jewellers ✨\n\n📢 Today's Live Rates:\n\n🟡 GOLD\n• Gold Bar (99.50%): ₹${rates.gold_bar_9950}\n• Gold Bar (99.99%): ₹${rates.gold_bar_9999}\n• Gold RTGS (99.99%): ₹${rates.gold_rtgs_9999}\n\n⚪ SILVER\n• Silver Batiya: ₹${rates.silver_batiya}\n• Silver RTGS: ₹${rates.silver_rtgs_batiya}\n\nThank you for your business! 🙏\nVisit us for the finest jewellery and purity you can trust.\n\n📞 Contact: 9335660331`;
-            try {
-              await navigator.share({
-                title: 'Live Rates - Gulab Ornament X Madhuri Jewellers',
-                text: shareText,
-              });
-            } catch (err) {
-              console.error("Error sharing:", err);
-            }
-          } else {
-            alert('Share functionality is not supported on this browser.');
-          }
+        const share = async () => {
+          if (!navigator.share || !rates) return;
+          const text = `🎊 HAPPY NEW YEAR 2026! 🎊\n\n✨ Live Bullion Rates from Gulab X Madhuri ✨\n🟡 Gold 99.99: ₹${rates.gold_bar_9999}\n🟡 Gold 99.50: ₹${rates.gold_bar_9950}\n⚪ Silver: ₹${rates.silver_batiya}\n\nMay your year be as bright as gold! ✨`;
+          try { await navigator.share({ title: 'Gulab & Madhuri Jewellers 2026', text }); } catch {}
         };
 
-        return (
-          <div className="flex flex-col flex-grow w-full max-w-lg mx-auto h-full shadow-2xl bg-[#FFFDF8]" style={{ fontFamily: 'var(--font-body)' }}>
-            {/* Header - Sticky */}
-            <header className="px-4 py-3 glass-effect z-50 border-b border-gold-100 shadow-sm sticky top-0">
-              <div className="flex flex-col items-center justify-center">
+        return html`
+          <div className="flex flex-col min-h-screen max-w-lg mx-auto w-full relative">
+            <${DynamicFireworks} active=${showOverlay} />
+            
+            ${showOverlay && html`
+              <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-10 text-center animate-in fade-in duration-1000">
+                <${ConfettiRain} />
                 
-                {/* Brand Area */}
-                <div className="flex flex-col items-center gap-0.5 mb-1">
-                   <h1 className="text-center flex flex-col items-center leading-tight">
-                     <span className="text-3xl sm:text-4xl font-bold gold-text-shimmer drop-shadow-sm pb-0.5" style={{ fontFamily: 'var(--font-heading)' }}>
-                       Gulab Ornament
-                     </span>
-                     <div className="flex items-center gap-2 w-full justify-center my-0.5 opacity-80">
-                         <div className="h-px bg-gold-300 w-6"></div>
-                         <span className="text-[9px] text-gold-600 uppercase tracking-widest font-medium">collaborating with</span>
-                         <div className="h-px bg-gold-300 w-6"></div>
-                     </div>
-                     <span className="text-2xl sm:text-3xl font-semibold gold-text-shimmer" style={{ fontFamily: 'var(--font-heading)' }}>
-                       Madhuri Jewellers
-                     </span>
-                   </h1>
+                <h2 className="text-4xl md:text-5xl font-black font-heading gold-text mb-4 leading-tight tracking-tight uppercase animate-pulse-slow">
+                  Happy New Year
+                </h2>
+                <h1 className="text-8xl md:text-9xl font-black font-accent text-white mb-8 tracking-tighter opacity-95 drop-shadow-[0_0_40px_rgba(212,175,55,0.6)]">
+                  2026
+                </h1>
+                
+                <div className="space-y-4 mb-12 relative z-[102]">
+                   <p className="text-gold-500 font-accent tracking-[0.4em] text-xs font-black uppercase">Prosperity • Success • Wealth</p>
+                   <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase font-bold">Gulab Ornament X Madhuri Jewellers</p>
                 </div>
+                
+                <button 
+                  onClick=${() => setShowOverlay(false)} 
+                  className="shimmer-btn text-black px-12 py-5 rounded-full font-black uppercase tracking-[0.2em] text-[10px] hover:scale-105 transition-transform relative z-[102] shadow-[0_25px_60px_rgba(212,175,55,0.4)]"
+                >
+                  Enter Celebration 🎊
+                </button>
+                
+                <p className="mt-8 text-[9px] text-white/20 uppercase tracking-[0.4em] font-bold">Touch to begin the journey</p>
+              </div>
+            `}
 
-                {/* Tagline */}
-                <div className="mt-0.5">
-                   <p className="text-[10px] uppercase tracking-[0.3em] text-gold-500 font-semibold text-center">Excellence in Purity</p>
+            <header className="px-8 pt-12 pb-10 sticky top-0 bg-festive-dark/95 backdrop-blur-2xl z-50 border-b border-white/5">
+              <div className="flex flex-col items-center text-center">
+                <h1 className="text-3xl font-black font-accent gold-text tracking-tighter uppercase leading-none">Gulab Ornament</h1>
+                <div className="flex items-center gap-4 w-full justify-center my-4">
+                  <div className="h-px w-12 bg-gold-900/40"></div>
+                  <span className="text-[10px] font-black text-gold-600 uppercase tracking-[0.5em] italic">X</span>
+                  <div className="h-px w-12 bg-gold-900/40"></div>
                 </div>
-
+                <h2 className="text-2xl font-bold font-accent gold-text tracking-tight uppercase leading-none">Madhuri Jewellers</h2>
+                <div className="inline-flex items-center gap-2 mt-6 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/20">
+                  <span className="text-[10px] font-black text-gold-500 uppercase tracking-[0.3em]">Celebration 2026 🎊</span>
+                </div>
               </div>
             </header>
 
-            {/* Main Content - Scrollable */}
-            <main className="flex-grow flex flex-col px-5 py-6 gap-8 overflow-y-auto pb-12 bg-gradient-to-b from-transparent to-gold-50/30">
-              
-              {/* Controls */}
-              <div className="flex justify-between items-center px-1">
-                 <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100/60 shadow-sm">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">Live Market</span>
-                 </div>
-                 <button 
-                    onClick={handleShare} 
-                    className="py-1.5 px-3.5 rounded-full bg-white hover:bg-gold-50 text-gold-800 transition-colors flex items-center gap-2 border border-gold-200 shadow-sm group"
-                    aria-label="Share Rates"
-                  >
-                    <ShareIcon className="w-3.5 h-3.5 text-gold-500 group-hover:text-gold-700" />
-                    <span className="text-[11px] font-bold">Share</span>
-                  </button>
+            <main className="flex-grow overflow-y-auto px-6 py-8 space-y-12 pb-32">
+              <div className="flex justify-between items-center px-2">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></span>
+                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Live Rates</span>
+                  </div>
+                  <p className="text-[8px] text-white/40 font-bold mt-1 tracking-wider">AS OF: ${lastUpdate || 'LOADING...'}</p>
+                </div>
+                <button onClick=${share} className="p-4 rounded-2xl glass-card hover:bg-gold-500/20 transition-all active:scale-95 shadow-lg">
+                  <${Icons.Share} />
+                </button>
               </div>
-              
-              {/* Error Message Only */}
-              {error && <p className="text-red-500 text-xs text-center py-2 bg-red-50 rounded-lg border border-red-100">{error}</p>}
-              
-              {/* Gold Section */}
-              <section>
-                 <SectionHeader 
-                    title="Gold Rates" 
-                    icon={GoldBarIcon} 
-                    colorClass="border-gold-200 text-gold-800"
-                 />
-                 <div className="flex flex-col gap-4">
-                    {GOLD_ITEMS.map((item) => (
-                       <div key={item.key}>
-                          <RateCard 
-                             label={item.label}
-                             purity={item.purity}
-                             rate={rates ? rates[item.key] : undefined}
-                             loading={loading && !rates}
-                          />
-                       </div>
-                    ))}
-                 </div>
+
+              <section className="space-y-6">
+                <div className="flex items-center gap-3 px-2">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-700">Gold Bullion</h3>
+                  <div className="h-px flex-grow bg-gold-900/30"></div>
+                </div>
+                <div className="grid gap-6">
+                  <${RateCard} label="Gold Bar 99.50" purity="Commercial 995" rate=${rates?.gold_bar_9950} loading=${loading} />
+                  <${RateCard} label="Gold Bar 99.99" purity="Purest 9999" rate=${rates?.gold_bar_9999} loading=${loading} />
+                  <${RateCard} label="Gold RTGS" purity="Wholesale" rate=${rates?.gold_rtgs_9999} loading=${loading} />
+                </div>
               </section>
 
-              {/* Silver Section */}
-              <section>
-                 <SectionHeader 
-                    title="Silver Rates" 
-                    icon={SilverBarIcon} 
-                    colorClass="border-slate-200 text-slate-700"
-                 />
-                 <div className="flex flex-col gap-4">
-                    {SILVER_ITEMS.map((item) => (
-                       <div key={item.key}>
-                          <RateCard 
-                             label={item.label}
-                             purity={item.purity}
-                             rate={rates ? rates[item.key] : undefined}
-                             loading={loading && !rates}
-                             isSilver={true}
-                          />
-                       </div>
-                    ))}
-                 </div>
+              <section className="space-y-6">
+                 <div className="flex items-center gap-3 px-2">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">Silver Bullion</h3>
+                  <div className="h-px flex-grow bg-slate-800"></div>
+                </div>
+                <div className="grid gap-6">
+                  <${RateCard} label="Silver Batiya" purity="999 Silver" rate=${rates?.silver_batiya} loading=${loading} isSilver />
+                  <${RateCard} label="Silver RTGS" purity="Bulk Casting" rate=${rates?.silver_rtgs_batiya} loading=${loading} isSilver />
+                </div>
               </section>
 
-              {/* Contacts Section */}
-              <div className="mt-4">
-                <div className="flex items-center gap-4 mb-6 opacity-60">
-                    <div className="h-px bg-gold-300 flex-grow"></div>
-                    <div className="p-1.5 rounded-full border border-gold-200 bg-gold-50">
-                        <DiamondIcon className="w-3 h-3 text-gold-500" />
+              <section className="pt-10 border-t border-white/10 space-y-8">
+                <p className="text-[10px] font-black uppercase tracking-[0.8em] text-gold-900/50 text-center">Boutique Contact</p>
+                <div className="grid gap-5">
+                  <a href="tel:9335660331" className="flex items-center justify-between p-6 glass-card rounded-3xl group hover:border-gold-500/50 transition-all bg-gradient-to-r from-transparent to-white/[0.01]">
+                    <div className="space-y-1">
+                      <p className="font-bold text-base text-gold-50 tracking-tight">Mr. Gulab Verma</p>
+                      <p className="text-[9px] text-gold-600 font-black tracking-widest uppercase opacity-70">PROPRIETOR</p>
                     </div>
-                    <div className="h-px bg-gold-300 flex-grow"></div>
+                    <div className="p-3 bg-gold-500/10 rounded-2xl group-hover:bg-gold-500 group-hover:text-black transition-all shadow-lg">
+                      <${Icons.Phone} />
+                    </div>
+                  </a>
+                  <a href="tel:7499233028" className="flex items-center justify-between p-6 glass-card rounded-3xl group hover:border-gold-500/50 transition-all bg-gradient-to-r from-transparent to-white/[0.01]">
+                    <div className="space-y-1">
+                      <p className="font-bold text-base text-gold-50 tracking-tight">Vikas Verma</p>
+                      <p className="text-[9px] text-gold-600 font-black tracking-widest uppercase opacity-70"></p>
+                    </div>
+                    <div className="p-3 bg-gold-500/10 rounded-2xl group-hover:bg-gold-500 group-hover:text-black transition-all shadow-lg">
+                      <${Icons.Phone} />
+                    </div>
+                  </a>
+                  <a href="tel:7619996888" className="flex items-center justify-between p-6 glass-card rounded-3xl group hover:border-gold-500/50 transition-all bg-gradient-to-r from-transparent to-white/[0.01]">
+                    <div className="space-y-1">
+                      <p className="font-bold text-base text-gold-50 tracking-tight">Nishant Verma</p>
+                      <p className="text-[9px] text-gold-600 font-black tracking-widest uppercase opacity-70"></p>
+                    </div>
+                    <div className="p-3 bg-gold-500/10 rounded-2xl group-hover:bg-gold-500 group-hover:text-black transition-all shadow-lg">
+                      <${Icons.Phone} />
+                    </div>
+                  </a>
                 </div>
-                <div className="flex flex-col gap-3">
-                  <ContactCard name="Gulab Ji" role="Proprietor" number="9335660331" />
-                  <ContactCard name="Vikas Verma" number="7499233028" />
-                  <ContactCard name="Nishant Verma" number="7619996888" />
-                </div>
-              </div>
-
+              </section>
             </main>
 
-            {/* Footer */}
-            <footer className="bg-white text-gold-900/40 py-6 text-center shrink-0 border-t border-gold-100">
-              <p className="text-[10px] font-semibold tracking-widest uppercase">
-                &copy; 2024 Gulab Ornament X Madhuri Jewellers
-              </p>
+            <footer className="py-12 bg-black/80 border-t border-white/5 text-center shrink-0">
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-[9px] font-black tracking-[0.8em] text-gold-900/40 uppercase">Estd. Legacy in Fine Jewellery</p>
+                <p className="text-[8px] font-bold text-white/20 tracking-widest uppercase">© 2026 GULAB & MADHURI GROUP</p>
+              </div>
             </footer>
           </div>
-        );
+        `;
       };
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(
-        <ErrorBoundary>
-            <App />
-        </ErrorBoundary>
-      );
+      root.render(React.createElement(App));
     </script>
   </body>
 </html>
